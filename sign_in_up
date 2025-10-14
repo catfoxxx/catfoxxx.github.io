@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サインイン・サインアップ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #4a6cf7;
+            color: #4a6cf7;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        input:focus {
+            border-color: #4a6cf7;
+            outline: none;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #3a5bd9;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .forgot-password a {
+            color: #4a6cf7;
+            text-decoration: none;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="signin">サインイン</div>
+            <div class="tab" data-tab="signup">サインアップ</div>
+        </div>
+        
+        <div class="form-container">
+            <!-- サインインフォーム -->
+            <form id="signin-form" class="form active">
+                <h2>アカウントにサインイン</h2>
+                
+                <div class="form-group">
+                    <label for="signin-username">ユーザーネームまたはメールアドレス</label>
+                    <input type="text" id="signin-username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signin-password">パスワード</label>
+                    <input type="password" id="signin-password" required>
+                </div>
+                
+                <button type="submit">サインイン</button>
+                
+                <div class="forgot-password">
+                    <a href="#">パスワードをお忘れですか？</a>
+                </div>
+            </form>
+            
+            <!-- サインアップフォーム -->
+            <form id="signup-form" class="form">
+                <h2>新規アカウント作成</h2>
+                
+                <div class="form-group">
+                    <label for="signup-username">ユーザーネーム</label>
+                    <input type="text" id="signup-username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-name">名前</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-email">メールアドレス</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">パスワード</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+                
+                <button type="submit">サインアップ</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const forms = document.querySelectorAll('.form');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // タブのアクティブ状態を切り替え
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // フォームの表示を切り替え
+                    forms.forEach(form => {
+                        form.classList.remove('active');
+                        if (form.id === `${targetTab}-form`) {
+                            form.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // フォーム送信の処理
+            document.getElementById('signin-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('signin-username').value;
+                const password = document.getElementById('signin-password').value;
+                
+                // ここで実際のサインイン処理を実装
+                console.log('サインイン:', { username, password });
+                alert('サインインしました（デモ）');
+            });
+            
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('signup-username').value;
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                
+                // ここで実際のサインアップ処理を実装
+                console.log('サインアップ:', { username, name, email, password });
+                alert('サインアップしました（デモ）');
+            });
+        });
+    </script>
+</body>
+</html>
