@@ -54,6 +54,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .nav-item:hover {
@@ -266,33 +267,33 @@
 
     <!-- サイドバー -->
     <nav class="sidebar">
-        <a href="#" class="nav-item">
+        <a href="http://localhost:5000/" class="nav-item">
             <i class="fas fa-home"></i>
             <span>ホーム</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="http://localhost:5000/profile" class="nav-item">
             <i class="fas fa-user"></i>
             <span>プロフィール</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="http://localhost:5000/settings" class="nav-item">
             <i class="fas fa-cog"></i>
             <span>設定</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="http://localhost:5000/messages" class="nav-item">
             <i class="fas fa-envelope"></i>
             <span>メッセージ</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="http://localhost:5000/analytics" class="nav-item">
             <i class="fas fa-chart-bar"></i>
             <span>統計</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="http://localhost:5000/documents" class="nav-item">
             <i class="fas fa-file"></i>
             <span>ドキュメント</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="http://catfoxxx.github.io" class="nav-item">
             <i class="fas fa-calendar"></i>
-            <span>カレンダー</span>
+            <span>カレンダー・予定</span>
         </a>
     </nav>
 
@@ -326,19 +327,26 @@
         <div class="dashboard-grid">
             <div class="content-card">
                 <h2><i class="fas fa-tasks" style="color: #3498db; margin-right: 10px;"></i>最近の活動</h2>
-                <p>プロジェクト「新規Webサイト」を更新しました。</p>
-                <p>デザインレビューを完了しました。</p>
+                <p></p>
+                <p></p>
             </div>
             <div class="content-card">
                 <h2><i class="fas fa-bell" style="color: #e74c3c; margin-right: 10px;"></i>通知</h2>
                 <p>新しいメッセージが3件あります。</p>
-                <p>明日の会議のリマインダー</p>
+                <p></p>
             </div>
             <div class="content-card">
                 <h2><i class="fas fa-chart-line" style="color: #2ecc71; margin-right: 10px;"></i>パフォーマンス</h2>
                 <p>今月の目標達成率: 75%</p>
-                <p>プロジェクト進捗: 良好</p>
+                <p></p>
             </div>
+        </div>
+        
+        <!-- 現在のページ情報 -->
+        <div class="content-card">
+            <h2><i class="fas fa-info-circle" style="color: #3498db; margin-right: 10px;"></i>ページ情報</h2>
+            <p>このページはホーム画面です。サイドバーの各ボタンをクリックすると、対応するページに移動します。</p>
+            <p style="margin-top: 10px; font-weight: bold;">現在のURL: <span id="current-url">http://localhost:5000/</span></p>
         </div>
     </main>
 
@@ -347,6 +355,10 @@
             const menuToggle = document.querySelector('.menu-toggle');
             const sidebar = document.querySelector('.sidebar');
             const overlay = document.querySelector('.overlay');
+            const currentUrlElement = document.getElementById('current-url');
+
+            // 現在のURLを表示
+            currentUrlElement.textContent = window.location.href;
 
             menuToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
@@ -361,11 +373,36 @@
             // アクティブなナビゲーション項目の設定
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function(e) {
+                    // 実際のナビゲーションではこの部分は不要ですが、
+                    // デモンストレーション用にアクティブ状態を視覚的に示します
                     navItems.forEach(nav => nav.classList.remove('active'));
                     this.classList.add('active');
+                    
+                    // 実際のナビゲーションでは以下のコードは不要ですが、
+                    // デモ用に現在のURLを更新します
+                    setTimeout(() => {
+                        currentUrlElement.textContent = this.href;
+                    }, 500);
                 });
             });
+
+            // ページ読み込み時に現在のパスに基づいてアクティブな項目を設定
+            function setActiveNavItem() {
+                const currentPath = window.location.pathname;
+                navItems.forEach(item => {
+                    const itemPath = new URL(item.href).pathname;
+                    if (itemPath === currentPath || 
+                        (currentPath === '/' && itemPath === '/') ||
+                        (currentPath === '' && itemPath === '/')) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+            
+            setActiveNavItem();
         });
     </script>
 </body>
