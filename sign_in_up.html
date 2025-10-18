@@ -13,7 +13,7 @@
         }
         
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,11 +23,27 @@
         
         .container {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
         }
         
         .tabs {
@@ -37,17 +53,19 @@
         
         .tab {
             flex: 1;
-            padding: 15px;
+            padding: 18px;
             text-align: center;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
+            color: #555;
         }
         
         .tab.active {
             border-bottom: 3px solid #4a6cf7;
             color: #4a6cf7;
+            background-color: white;
         }
         
         .form-container {
@@ -64,14 +82,15 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: #333;
+            font-size: 24px;
         }
         
         .form-group {
@@ -80,53 +99,160 @@
         
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
             color: #555;
         }
         
-        input {
+        input, select {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
-            transition: border 0.3s ease;
+            transition: all 0.3s ease;
         }
         
-        input:focus {
+        input:focus, select:focus {
             border-color: #4a6cf7;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+        
+        .birthday-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .birthday-group select {
+            flex: 1;
+        }
+        
+        .hand-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .hand-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hand-option input[type="radio"] {
+            width: auto;
+        }
+        
+        .hand-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .hand-type {
+            flex: 1;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .hand-type h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-btn {
+            background-color: #f8f9fa;
+            border: 1px dashed #ddd;
+            color: #555;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .file-upload-btn:hover {
+            background-color: #e9ecef;
+            border-color: #4a6cf7;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
         }
         
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #4a6cf7;
+            padding: 14px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
         
         button:hover {
-            background-color: #3a5bd9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.4);
         }
         
         .forgot-password {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         .forgot-password a {
             color: #4a6cf7;
             text-decoration: none;
+            font-weight: 500;
         }
         
         .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-footer a {
+            color: #4a6cf7;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-footer a:hover {
             text-decoration: underline;
         }
         
@@ -138,11 +264,24 @@
             .form-container {
                 padding: 20px;
             }
+            
+            .birthday-group {
+                flex-direction: column;
+            }
+            
+            .hand-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>アカウントを作成</h1>
+            <p>野球・ソフトボールコミュニティへようこそ</p>
+        </div>
+        
         <div class="tabs">
             <div class="tab active" data-tab="signin">サインイン</div>
             <div class="tab" data-tab="signup">サインアップ</div>
@@ -155,18 +294,22 @@
                 
                 <div class="form-group">
                     <label for="signin-username">ユーザーネームまたはメールアドレス</label>
-                    <input type="text" id="signin-username" required>
+                    <input type="text" id="signin-username" placeholder="ユーザーネームまたはメールアドレス" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="signin-password">パスワード</label>
-                    <input type="password" id="signin-password" required>
+                    <input type="password" id="signin-password" placeholder="パスワード" required>
                 </div>
                 
                 <button type="submit">サインイン</button>
                 
                 <div class="forgot-password">
                     <a href="#">パスワードをお忘れですか？</a>
+                </div>
+                
+                <div class="form-footer">
+                    アカウントをお持ちでない方は <a href="#" id="go-to-signup">サインアップ</a>
                 </div>
             </form>
             
@@ -176,25 +319,97 @@
                 
                 <div class="form-group">
                     <label for="signup-username">ユーザーネーム</label>
-                    <input type="text" id="signup-username" required>
+                    <input type="text" id="signup-username" placeholder="ユーザーネーム" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="signup-name">名前</label>
-                    <input type="text" id="signup-name" required>
+                    <input type="text" id="signup-name" placeholder="名前" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="signup-email">メールアドレス</label>
-                    <input type="email" id="signup-email" required>
+                    <input type="email" id="signup-email" placeholder="メールアドレス" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="signup-password">パスワード</label>
-                    <input type="password" id="signup-password" required>
+                    <input type="password" id="signup-password" placeholder="パスワード" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-birthday">生年月日</label>
+                    <div class="birthday-group">
+                        <select id="signup-year" required>
+                            <option value="" disabled selected>年</option>
+                            <!-- JavaScriptで年を動的に生成 -->
+                        </select>
+                        <select id="signup-month" required>
+                            <option value="" disabled selected>月</option>
+                            <!-- JavaScriptで月を動的に生成 -->
+                        </select>
+                        <select id="signup-day" required>
+                            <option value="" disabled selected>日</option>
+                            <!-- JavaScriptで日を動的に生成 -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>投げ手・打ち手</label>
+                    <div class="hand-container">
+                        <div class="hand-type">
+                            <h3>投げ手</h3>
+                            <div class="hand-group">
+                                <div class="hand-option">
+                                    <input type="radio" id="signup-throw-right" name="throw-hand" value="right" required>
+                                    <label for="signup-throw-right">右</label>
+                                </div>
+                                <div class="hand-option">
+                                    <input type="radio" id="signup-throw-left" name="throw-hand" value="left">
+                                    <label for="signup-throw-left">左</label>
+                                </div>
+                                <div class="hand-option">
+                                    <input type="radio" id="signup-throw-both" name="throw-hand" value="both">
+                                    <label for="signup-throw-both">両</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hand-type">
+                            <h3>打ち手</h3>
+                            <div class="hand-group">
+                                <div class="hand-option">
+                                    <input type="radio" id="signup-bat-right" name="bat-hand" value="right" required>
+                                    <label for="signup-bat-right">右</label>
+                                </div>
+                                <div class="hand-option">
+                                    <input type="radio" id="signup-bat-left" name="bat-hand" value="left">
+                                    <label for="signup-bat-left">左</label>
+                                </div>
+                                <div class="hand-option">
+                                    <input type="radio" id="signup-bat-both" name="bat-hand" value="both">
+                                    <label for="signup-bat-both">両</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-icon">プロフィール画像</label>
+                    <div class="file-upload">
+                        <button type="button" class="file-upload-btn">
+                            <span id="file-name">画像を選択...</span>
+                        </button>
+                        <input type="file" id="signup-icon" accept="image/*">
+                    </div>
                 </div>
                 
                 <button type="submit">サインアップ</button>
+                
+                <div class="form-footer">
+                    既にアカウントをお持ちの方は <a href="#" id="go-to-signin">サインイン</a>
+                </div>
             </form>
         </div>
     </div>
@@ -203,7 +418,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.tab');
             const forms = document.querySelectorAll('.form');
+            const goToSignup = document.getElementById('go-to-signup');
+            const goToSignin = document.getElementById('go-to-signin');
+            const fileInput = document.getElementById('signup-icon');
+            const fileName = document.getElementById('file-name');
             
+            // タブ切り替え機能
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const targetTab = this.getAttribute('data-tab');
@@ -222,6 +442,56 @@
                 });
             });
             
+            // フォーム間のリンク機能
+            goToSignup.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.tab[data-tab="signup"]').click();
+            });
+            
+            goToSignin.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.tab[data-tab="signin"]').click();
+            });
+            
+            // ファイルアップロードの表示
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    fileName.textContent = this.files[0].name;
+                } else {
+                    fileName.textContent = '画像を選択...';
+                }
+            });
+            
+            // 生年月日選択肢の生成
+            const yearSelect = document.getElementById('signup-year');
+            const monthSelect = document.getElementById('signup-month');
+            const daySelect = document.getElementById('signup-day');
+            
+            // 年の生成 (1950年から現在まで)
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= 1950; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '年';
+                yearSelect.appendChild(option);
+            }
+            
+            // 月の生成
+            for (let month = 1; month <= 12; month++) {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = month + '月';
+                monthSelect.appendChild(option);
+            }
+            
+            // 日の生成 (1日から31日まで)
+            for (let day = 1; day <= 31; day++) {
+                const option = document.createElement('option');
+                option.value = day;
+                option.textContent = day + '日';
+                daySelect.appendChild(option);
+            }
+            
             // フォーム送信の処理
             document.getElementById('signin-form').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -239,9 +509,24 @@
                 const name = document.getElementById('signup-name').value;
                 const email = document.getElementById('signup-email').value;
                 const password = document.getElementById('signup-password').value;
+                const year = document.getElementById('signup-year').value;
+                const month = document.getElementById('signup-month').value;
+                const day = document.getElementById('signup-day').value;
+                const throwHand = document.querySelector('input[name="throw-hand"]:checked').value;
+                const batHand = document.querySelector('input[name="bat-hand"]:checked').value;
+                const icon = document.getElementById('signup-icon').files[0];
                 
                 // ここで実際のサインアップ処理を実装
-                console.log('サインアップ:', { username, name, email, password });
+                console.log('サインアップ:', { 
+                    username, 
+                    name, 
+                    email, 
+                    password, 
+                    birthday: `${year}/${month}/${day}`, 
+                    throwHand,
+                    batHand,
+                    icon: icon ? icon.name : 'なし'
+                });
                 alert('サインアップしました（デモ）');
             });
         });
