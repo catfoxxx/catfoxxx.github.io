@@ -33,11 +33,39 @@
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 900px;
+            margin: 0 auto;
         }
         
         h1 {
             font-size: 1.8rem;
             margin-bottom: 10px;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .back-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-button:hover {
+            background-color: #2980b9;
         }
         
         .tab-container {
@@ -102,12 +130,32 @@
             font-size: 0.9rem;
             border-top: 1px solid #ecf0f1;
         }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            h1 {
+                order: 2;
+            }
+            
+            .back-button {
+                order: 1;
+                align-self: flex-start;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>成績入力システム</h1>
+            <div class="header-content">
+                <a href="http://localhost:8000" class="back-button">元のページに戻る</a>
+                <h1>成績入力システム</h1>
+                <div style="width: 120px;"></div> <!-- スペーサー -->
+            </div>
             <p>打撃成績と投手成績を入力・管理できます</p>
         </header>
         
