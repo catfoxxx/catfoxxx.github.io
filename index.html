@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マルチビューカレンダー</title>
+    <title>強化版マルチビューカレンダー</title>
     <style>
         * {
             margin: 0;
@@ -248,12 +248,36 @@
             padding: 2px 5px;
             border-radius: 3px;
             margin-top: 3px;
+            max-width: 100%;
+            display: block;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .month-view .event-preview:hover {
+            background-color: #bbdefb;
+            transform: translateX(2px);
         }
 
         .month-view .event-time {
             font-size: 0.7rem;
             color: #e74c3c;
             font-weight: bold;
+        }
+
+        .month-view .more-events {
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            margin-top: 3px;
+            cursor: pointer;
+            text-align: center;
+            padding: 2px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .month-view .more-events:hover {
+            background-color: #e3f2fd;
         }
 
         /* 週表示スタイル */
@@ -298,6 +322,11 @@
             border-bottom: 1px solid #eee;
             border-right: 1px solid #eee;
             position: relative;
+            cursor: pointer;
+        }
+
+        .week-view .hour-slot:hover {
+            background-color: #f5f5f5;
         }
 
         .week-view .event-block {
@@ -311,6 +340,16 @@
             font-size: 0.8rem;
             overflow: hidden;
             cursor: pointer;
+            max-height: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            transition: all 0.2s;
+        }
+
+        .week-view .event-block:hover {
+            background-color: #bbdefb;
+            transform: scale(1.02);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         /* 日表示スタイル */
@@ -350,6 +389,11 @@
         .day-view .hour-slot {
             border-bottom: 1px solid #eee;
             position: relative;
+            cursor: pointer;
+        }
+
+        .day-view .hour-slot:hover {
+            background-color: #f5f5f5;
         }
 
         .day-view .event-block {
@@ -363,6 +407,16 @@
             font-size: 0.8rem;
             overflow: hidden;
             cursor: pointer;
+            max-height: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            transition: all 0.2s;
+        }
+
+        .day-view .event-block:hover {
+            background-color: #bbdefb;
+            transform: scale(1.02);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         /* イベントリストビュー */
@@ -396,11 +450,14 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.2s;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .event-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            background-color: #e3f2fd;
         }
 
         .event-date {
@@ -412,10 +469,12 @@
             border-radius: 4px;
             margin-right: 10px;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .event-details {
             flex: 1;
+            min-width: 0; /* これによりflexアイテムが縮小できる */
         }
 
         .event-time {
@@ -423,17 +482,20 @@
             color: #e74c3c;
             font-weight: bold;
             margin-bottom: 5px;
+            word-break: break-all;
         }
 
         .event-title {
             font-weight: bold;
             margin-bottom: 5px;
             color: #2c3e50;
+            word-break: break-word;
         }
 
         .event-description {
             font-size: 0.9rem;
             color: #7f8c8d;
+            word-break: break-word;
         }
 
         .no-events {
@@ -592,6 +654,63 @@
             background-color: #c0392b;
         }
 
+        /* 日別予定表示ポップアップ */
+        .day-events-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .day-event-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .day-event-item:hover {
+            background-color: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .day-event-time {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        .day-event-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .day-event-description {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .add-event-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .add-event-button:hover {
+            background-color: #2980b9;
+        }
+
         /* スマートフォン向けスタイル */
         @media (max-width: 768px) {
             .year-view {
@@ -704,8 +823,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>マルチビューカレンダー</h1>
-            <p class="subtitle">表示形式を切り替えて、予定を管理できます</p>
+            <h1>強化版マルチビューカレンダー</h1>
+            <p class="subtitle">予定をクリックして編集・削除、空白をクリックして新規追加</p>
             
             <div class="view-controls">
                 <button class="view-button" data-view="year">年表示</button>
@@ -729,7 +848,7 @@
         </div>
     </div>
 
-    <!-- ポップアップ -->
+    <!-- イベント編集ポップアップ -->
     <div class="popup-overlay" id="popup-overlay">
         <div class="popup">
             <div class="popup-header">
@@ -766,7 +885,33 @@
         </div>
     </div>
 
+    <!-- 日別予定表示ポップアップ -->
+    <div class="popup-overlay" id="day-events-popup">
+        <div class="popup">
+            <div class="popup-header">
+                <h3 class="popup-title" id="day-events-title">2023年10月15日の予定</h3>
+                <button class="close-button" id="close-day-events">&times;</button>
+            </div>
+            <div class="day-events-list" id="day-events-list">
+                <!-- 日別予定はJavaScriptで生成 -->
+            </div>
+            <button class="add-event-button" id="add-event-to-day">予定を追加</button>
+        </div>
+    </div>
+
     <script>
+        // XSS対策: HTMLエスケープ関数
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;')
+                .replace(/\//g, '&#x2F;');
+        }
+
         // 現在の日付を取得
         let currentDate = new Date();
         let currentYear = currentDate.getFullYear();
@@ -796,6 +941,13 @@
         const cancelEventButton = document.getElementById('cancel-event');
         const saveEventButton = document.getElementById('save-event');
         const deleteEventButton = document.getElementById('delete-event');
+        
+        // 日別予定ポップアップ要素
+        const dayEventsPopup = document.getElementById('day-events-popup');
+        const dayEventsTitle = document.getElementById('day-events-title');
+        const dayEventsList = document.getElementById('day-events-list');
+        const closeDayEventsButton = document.getElementById('close-day-events');
+        const addEventToDayButton = document.getElementById('add-event-to-day');
 
         // 選択された日付とイベントID
         let selectedDate = null;
@@ -1000,25 +1152,42 @@
                         if (event.startTime) {
                             const eventTime = document.createElement('div');
                             eventTime.className = 'event-time';
-                            eventTime.textContent = event.startTime;
+                            eventTime.textContent = escapeHTML(event.startTime);
                             dayElement.appendChild(eventTime);
                         }
                         
-                        eventPreview.textContent = event.title || '予定';
+                        eventPreview.textContent = escapeHTML(event.title || '予定');
+                        eventPreview.dataset.eventId = event.id;
+                        
+                        // 予定クリックで編集
+                        eventPreview.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            openEventPopup(year, month, i, null, event.id);
+                        });
+                        
                         dayElement.appendChild(eventPreview);
                     });
                     
                     // 3つ以上のイベントがある場合は「...」を表示
                     if (events[dateKey].length > 3) {
                         const moreEvents = document.createElement('div');
-                        moreEvents.className = 'event-preview';
+                        moreEvents.className = 'more-events';
                         moreEvents.textContent = `... 他${events[dateKey].length - 3}件`;
+                        
+                        // クリックで日別予定ポップアップ表示
+                        moreEvents.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showDayEvents(year, month, i);
+                        });
+                        
                         dayElement.appendChild(moreEvents);
                     }
                 }
                 
-                // クリックイベントの追加
-                dayElement.addEventListener('click', () => openEventPopup(year, month, i));
+                // 日付セルクリックで新規予定追加
+                dayElement.addEventListener('click', () => {
+                    openEventPopup(year, month, i);
+                });
                 
                 calendarElement.appendChild(dayElement);
             }
@@ -1099,7 +1268,7 @@
                     hourSlot.dataset.date = `${currentDay.getFullYear()}-${currentDay.getMonth() + 1}-${currentDay.getDate()}`;
                     hourSlot.dataset.hour = hour;
                     
-                    // クリックイベントの追加
+                    // クリックイベントの追加 - 空白部分クリックで新規予定追加
                     hourSlot.addEventListener('click', () => {
                         const date = hourSlot.dataset.date.split('-').map(Number);
                         openEventPopup(date[0], date[1]-1, date[2], hour);
@@ -1122,7 +1291,8 @@
                             eventBlock.className = 'event-block';
                             eventBlock.style.top = `${(startHour * 60 + startMinute) / 60 * 60}px`;
                             eventBlock.style.height = `${((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) / 60 * 60}px`;
-                            eventBlock.textContent = event.title || '予定';
+                            eventBlock.textContent = escapeHTML(event.title || '予定');
+                            eventBlock.dataset.eventId = event.id;
                             
                             eventBlock.addEventListener('click', (e) => {
                                 e.stopPropagation();
@@ -1189,7 +1359,7 @@
                 hourSlot.dataset.date = `${year}-${month + 1}-${day}`;
                 hourSlot.dataset.hour = hour;
                 
-                // クリックイベントの追加
+                // クリックイベントの追加 - 空白部分クリックで新規予定追加
                 hourSlot.addEventListener('click', () => {
                     openEventPopup(year, month, day, hour);
                 });
@@ -1211,7 +1381,8 @@
                         eventBlock.className = 'event-block';
                         eventBlock.style.top = `${(startHour * 60 + startMinute) / 60 * 60}px`;
                         eventBlock.style.height = `${((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) / 60 * 60}px`;
-                        eventBlock.textContent = `${event.startTime} ${event.title || '予定'}`;
+                        eventBlock.textContent = `${escapeHTML(event.startTime)} ${escapeHTML(event.title || '予定')}`;
+                        eventBlock.dataset.eventId = event.id;
                         
                         eventBlock.addEventListener('click', (e) => {
                             e.stopPropagation();
@@ -1290,6 +1461,7 @@
                 monthEvents.forEach(event => {
                     const eventItem = document.createElement('div');
                     eventItem.className = 'event-item';
+                    eventItem.dataset.eventId = event.id;
                     
                     const eventDate = document.createElement('div');
                     eventDate.className = 'event-date';
@@ -1304,20 +1476,20 @@
                         const eventTime = document.createElement('div');
                         eventTime.className = 'event-time';
                         eventTime.textContent = event.endTime 
-                            ? `${event.startTime} - ${event.endTime}`
-                            : `${event.startTime} -`;
+                            ? `${escapeHTML(event.startTime)} - ${escapeHTML(event.endTime)}`
+                            : `${escapeHTML(event.startTime)} -`;
                         eventDetails.appendChild(eventTime);
                     }
                     
                     const eventTitle = document.createElement('div');
                     eventTitle.className = 'event-title';
-                    eventTitle.textContent = event.title || '予定';
+                    eventTitle.textContent = escapeHTML(event.title || '予定');
                     eventDetails.appendChild(eventTitle);
                     
                     if (event.text) {
                         const eventDescription = document.createElement('div');
                         eventDescription.className = 'event-description';
-                        eventDescription.textContent = event.text;
+                        eventDescription.textContent = escapeHTML(event.text);
                         eventDetails.appendChild(eventDescription);
                     }
                     
@@ -1337,7 +1509,66 @@
             }
         }
 
-        // イベントポップアップを開く
+        // 日別予定ポップアップを表示
+        function showDayEvents(year, month, day) {
+            selectedDate = `${year}-${month + 1}-${day}`;
+            
+            dayEventsTitle.textContent = `${year}年${month + 1}月${day}日の予定`;
+            dayEventsList.innerHTML = '';
+            
+            const dateKey = `${year}-${month + 1}-${day}`;
+            if (events[dateKey] && events[dateKey].length > 0) {
+                events[dateKey].forEach(event => {
+                    const eventItem = document.createElement('div');
+                    eventItem.className = 'day-event-item';
+                    eventItem.dataset.eventId = event.id;
+                    
+                    if (event.startTime) {
+                        const eventTime = document.createElement('div');
+                        eventTime.className = 'day-event-time';
+                        eventTime.textContent = event.endTime 
+                            ? `${escapeHTML(event.startTime)} - ${escapeHTML(event.endTime)}`
+                            : `${escapeHTML(event.startTime)} -`;
+                        eventItem.appendChild(eventTime);
+                    }
+                    
+                    const eventTitle = document.createElement('div');
+                    eventTitle.className = 'day-event-title';
+                    eventTitle.textContent = escapeHTML(event.title || '予定');
+                    eventItem.appendChild(eventTitle);
+                    
+                    if (event.text) {
+                        const eventDescription = document.createElement('div');
+                        eventDescription.className = 'day-event-description';
+                        eventDescription.textContent = escapeHTML(event.text);
+                        eventItem.appendChild(eventDescription);
+                    }
+                    
+                    // クリックで編集
+                    eventItem.addEventListener('click', () => {
+                        closeDayEventsPopup();
+                        openEventPopup(year, month, day, null, event.id);
+                    });
+                    
+                    dayEventsList.appendChild(eventItem);
+                });
+            } else {
+                const noEvents = document.createElement('div');
+                noEvents.className = 'no-events';
+                noEvents.textContent = 'この日の予定はありません';
+                dayEventsList.appendChild(noEvents);
+            }
+            
+            dayEventsPopup.style.display = 'flex';
+        }
+
+        // 日別予定ポップアップを閉じる
+        function closeDayEventsPopup() {
+            dayEventsPopup.style.display = 'none';
+            selectedDate = null;
+        }
+
+        // イベント編集ポップアップを開く
         function openEventPopup(year, month, day, hour = null, eventId = null) {
             selectedDate = `${year}-${month + 1}-${day}`;
             selectedEventId = eventId;
@@ -1372,7 +1603,7 @@
             popupOverlay.style.display = 'flex';
         }
 
-        // ポップアップを閉じる
+        // イベント編集ポップアップを閉じる
         function closePopup() {
             popupOverlay.style.display = 'none';
             selectedDate = null;
@@ -1382,10 +1613,11 @@
         // イベントを保存
         function saveEvent() {
             if (selectedDate) {
-                const title = eventTitleInput.value.trim();
+                // XSS対策: 入力値をエスケープ
+                const title = escapeHTML(eventTitleInput.value.trim());
                 const startTime = startTimeInput.value;
                 const endTime = endTimeInput.value;
-                const text = eventInput.value.trim();
+                const text = escapeHTML(eventInput.value.trim());
                 
                 if (!events[selectedDate]) {
                     events[selectedDate] = [];
@@ -1536,6 +1768,13 @@
         cancelEventButton.addEventListener('click', closePopup);
         saveEventButton.addEventListener('click', saveEvent);
         deleteEventButton.addEventListener('click', deleteEvent);
+
+        closeDayEventsButton.addEventListener('click', closeDayEventsPopup);
+        addEventToDayButton.addEventListener('click', () => {
+            const dateParts = selectedDate.split('-').map(Number);
+            closeDayEventsPopup();
+            openEventPopup(dateParts[0], dateParts[1]-1, dateParts[2]);
+        });
 
         // 初期表示
         updateCalendarView();
