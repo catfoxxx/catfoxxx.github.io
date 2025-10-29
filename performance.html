@@ -166,12 +166,979 @@
         
         <div class="content-area">
             <div id="batting-content" class="tab-content active">
-                <div class="content-placeholder">
-                    <h3>打撃成績入力</h3>
-                    <p>ここに打撃成績の入力フォームが表示されます。</p>
-                    <p>打率、本塁打、打点などの項目を後で追加できます。</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>野球打撃成績管理システム</title>
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #2e86c1;
+            --light-color: #ebf5fb;
+            --border-color: #aed6f1;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: background-color 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            background-color: var(--light-color);
+            border-bottom: 3px solid var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 200px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: #333;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chart-placeholder {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            color: #6c757d;
+        }
+        
+        .debug-section {
+            border: 2px dashed #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .debug-controls {
+            margin: 15px 0;
+        }
+        
+        .json-display {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .status-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .form-col {
+                flex: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>野球打撃成績管理システム</h1>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="input">成績入力</div>
+            <div class="tab" data-tab="stats">基本指標</div>
+            <div class="tab" data-tab="analysis">詳細分析</div>
+            <div class="tab" data-tab="visualization">可視化</div>
+            <div class="tab" data-tab="debug">デバッグ</div>
+        </div>
+        
+        <!-- 成績入力タブ -->
+        <div class="tab-content active" id="input">
+            <h2>打撃成績入力</h2>
+            <form id="batting-form">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="game-date">試合日</label>
+                            <input type="date" id="game-date" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="opponent">対戦チーム</label>
+                            <input type="text" id="opponent" placeholder="例：○○高校" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="batting-result">打撃結果</label>
+                            <select id="batting-result" required>
+                                <option value="">選択してください</option>
+                                <option value="single">単打</option>
+                                <option value="double">二塁打</option>
+                                <option value="triple">三塁打</option>
+                                <option value="homerun">本塁打</option>
+                                <option value="walk">四球</option>
+                                <option value="hbp">死球</option>
+                                <option value="sac-bunt">犠打</option>
+                                <option value="sac-fly">犠飛</option>
+                                <option value="groundout">ゴロ</option>
+                                <option value="flyout">フライ</option>
+                                <option value="strikeout">三振</option>
+                                <option value="double-play">併殺打</option>
+                                <option value="error">エラー</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="hit-direction">打球方向</label>
+                            <select id="hit-direction" required>
+                                <option value="">選択してください</option>
+                                <option value="left">左</option>
+                                <option value="center">中</option>
+                                <option value="right">右</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="hit-type">打球種類</label>
+                            <select id="hit-type" required>
+                                <option value="">選択してください</option>
+                                <option value="ground">ゴロ</option>
+                                <option value="line-drive">ライナー</option>
+                                <option value="fly">フライ</option>
+                                <option value="infield-hit">内野安打</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="rbi">打点</label>
+                            <input type="number" id="rbi" min="0" max="4" value="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="run">得点</label>
+                            <select id="run">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="steal">盗塁</label>
+                            <select id="steal">
+                                <option value="">なし</option>
+                                <option value="success">成功</option>
+                                <option value="fail">失敗</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="runner-situation">ランナー状況（打席時）</label>
+                            <select id="runner-situation" required>
+                                <option value="none">無</option>
+                                <option value="first">一塁</option>
+                                <option value="second">二塁</option>
+                                <option value="third">三塁</option>
+                                <option value="first-second">一二塁</option>
+                                <option value="first-third">一三塁</option>
+                                <option value="second-third">二三塁</option>
+                                <option value="loaded">満塁</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="outs">アウトカウント（打席時）</label>
+                            <select id="outs" required>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="game-result">試合結果</label>
+                            <select id="game-result" required>
+                                <option value="win">勝</option>
+                                <option value="lose">負</option>
+                                <option value="draw">引分</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="pitcher-hand">投手の左右</label>
+                            <select id="pitcher-hand" required>
+                                <option value="right">右投手</option>
+                                <option value="left">左投手</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">備考メモ</label>
+                    <textarea id="notes" rows="3" placeholder="特殊プレーや感想などを記入"></textarea>
+                </div>
+                
+                <button type="submit" class="btn">成績を登録</button>
+            </form>
+        </div>
+        
+        <!-- 基本指標タブ -->
+        <div class="tab-content" id="stats">
+            <h2>基本指標</h2>
+            <div class="debug-controls">
+                <button id="load-stats" class="btn btn-success">基本指標を取得</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>打数 (AB)</h3>
+                    <div class="stat-value" id="ab-value">0</div>
+                    <p>打席数 - (四球 + 死球 + 犠打 + 犠飛)</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>安打 (H)</h3>
+                    <div class="stat-value" id="h-value">0</div>
+                    <p>単打 + 二塁打 + 三塁打 + 本塁打</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>塁打 (TB)</h3>
+                    <div class="stat-value" id="tb-value">0</div>
+                    <p>1×単打 + 2×二塁打 + 3×三塁打 + 4×本塁打</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>打率 (AVG)</h3>
+                    <div class="stat-value" id="avg-value">.000</div>
+                    <p>安打 ÷ 打数</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>出塁率 (OBP)</h3>
+                    <div class="stat-value" id="obp-value">.000</div>
+                    <p>(安打 + 四球 + 死球) ÷ (打数 + 四球 + 死球 + 犠飛)</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>長打率 (SLG)</h3>
+                    <div class="stat-value" id="slg-value">.000</div>
+                    <p>塁打 ÷ 打数</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>OPS</h3>
+                    <div class="stat-value" id="ops-value">.000</div>
+                    <p>出塁率 + 長打率</p>
                 </div>
             </div>
+            
+            <h3>状況別指標</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>得点圏打率</h3>
+                    <div class="stat-value" id="rbi-avg-value">.000</div>
+                    <p>得点圏での安打 ÷ 得点圏での打数</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>打点合計</h3>
+                    <div class="stat-value" id="total-rbi-value">0</div>
+                    <p>打点の合計</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>得点合計</h3>
+                    <div class="stat-value" id="total-runs-value">0</div>
+                    <p>得点の合計</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 詳細分析タブ -->
+        <div class="tab-content" id="analysis">
+            <h2>詳細分析</h2>
+            <div class="debug-controls">
+                <button id="load-analysis" class="btn btn-success">詳細分析を取得</button>
+            </div>
+            
+            <h3>打球傾向</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>ゴロ率</h3>
+                    <div class="stat-value" id="ground-rate-value">0%</div>
+                    <p>ゴロ数 ÷ 打球結果総数</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>フライ率</h3>
+                    <div class="stat-value" id="fly-rate-value">0%</div>
+                    <p>フライ数 ÷ 打球結果総数</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>流し打ち率</h3>
+                    <div class="stat-value" id="oppo-rate-value">0%</div>
+                    <p>右方向打球 ÷ 打球総数</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>引っ張り率</h3>
+                    <div class="stat-value" id="pull-rate-value">0%</div>
+                    <p>左方向打球 ÷ 打球総数</p>
+                </div>
+            </div>
+            
+            <h3>走塁系指標</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>盗塁成功率</h3>
+                    <div class="stat-value" id="steal-success-rate-value">0%</div>
+                    <p>盗塁成功 ÷ (盗塁成功 + 盗塁失敗)</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>進塁率</h3>
+                    <div class="stat-value" id="advance-rate-value">0%</div>
+                    <p>進塁成功回数 ÷ 出塁数</p>
+                </div>
+            </div>
+            
+            <h3>その他指標</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>指標</th>
+                        <th>値</th>
+                        <th>説明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>打席数 (PA)</td>
+                        <td id="pa-value">0</td>
+                        <td>打数 + 四球 + 死球 + 犠打 + 犠飛</td>
+                    </tr>
+                    <tr>
+                        <td>凡退数</td>
+                        <td id="outs-made-value">0</td>
+                        <td>打数 - 安打</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 可視化タブ -->
+        <div class="tab-content" id="visualization">
+            <h2>分析可視化</h2>
+            <div class="debug-controls">
+                <button id="load-visualization" class="btn btn-success">可視化データを取得</button>
+            </div>
+            
+            <h3>好調度グラフ</h3>
+            <div class="chart-container">
+                <div class="chart-placeholder" id="trend-chart">
+                    最近5試合の打率推移グラフが表示されます
+                </div>
+            </div>
+            
+            <h3>打球方向ヒートマップ</h3>
+            <div class="chart-container">
+                <div class="chart-placeholder" id="heatmap-chart">
+                    打球方向と安打率のヒートマップが表示されます
+                </div>
+            </div>
+            
+            <h3>打撃傾向レーダーチャート</h3>
+            <div class="chart-container">
+                <div class="chart-placeholder" id="radar-chart">
+                    出塁率・長打率・得点圏打率などのレーダーチャートが表示されます
+                </div>
+            </div>
+        </div>
+        
+        <!-- デバッグタブ -->
+        <div class="tab-content" id="debug">
+            <h2>デバッグ情報</h2>
+            <div class="debug-section">
+                <h3>送信データ (JSON)</h3>
+                <div class="json-display" id="debug-send">送信データがここに表示されます</div>
+                
+                <h3>受信データ (JSON)</h3>
+                <div class="json-display" id="debug-receive">受信データがここに表示されます</div>
+                
+                <div class="debug-controls">
+                    <button id="clear-debug" class="btn btn-warning">デバッグ情報をクリア</button>
+                    <button id="toggle-debug" class="btn btn-danger">デバッグセクションを非表示</button>
+                </div>
+            </div>
+            
+            <h3>ステータスメッセージ</h3>
+            <div id="status-messages"></div>
+            
+            <h3>テスト用操作</h3>
+            <div class="debug-controls">
+                <button id="test-success" class="btn btn-success">成功レスポンスのテスト</button>
+                <button id="test-error" class="btn btn-danger">エラーレスポンスのテスト</button>
+                <button id="load-all-data" class="btn">全データを取得</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // タブ切り替え機能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // すべてのタブとコンテンツを非アクティブに
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // クリックされたタブと対応するコンテンツをアクティブに
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 成績データ保存用配列
+        let battingData = [];
+        
+        // XSS対策: HTMLエスケープ関数
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // ステータスメッセージ表示関数
+        function showStatus(message, type = 'success') {
+            const statusContainer = document.getElementById('status-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `status-message status-${type}`;
+            messageDiv.textContent = message;
+            statusContainer.appendChild(messageDiv);
+            
+            // 5秒後にメッセージを自動削除
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+        
+        // デバッグ情報表示関数
+        function updateDebugDisplay(sendData, receiveData) {
+            document.getElementById('debug-send').textContent = JSON.stringify(sendData, null, 2);
+            document.getElementById('debug-receive').textContent = JSON.stringify(receiveData, null, 2);
+        }
+        
+        // フォーム送信処理
+        document.getElementById('batting-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // フォームデータを取得
+            const formData = {
+                gameDate: document.getElementById('game-date').value,
+                opponent: document.getElementById('opponent').value,
+                battingResult: document.getElementById('batting-result').value,
+                hitDirection: document.getElementById('hit-direction').value,
+                hitType: document.getElementById('hit-type').value,
+                rbi: parseInt(document.getElementById('rbi').value),
+                run: parseInt(document.getElementById('run').value),
+                steal: document.getElementById('steal').value,
+                runnerSituation: document.getElementById('runner-situation').value,
+                outs: parseInt(document.getElementById('outs').value),
+                gameResult: document.getElementById('game-result').value,
+                pitcherHand: document.getElementById('pitcher-hand').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            // データを保存
+            battingData.push(formData);
+            
+            // JSON形式で送信（模拟）
+            const jsonData = JSON.stringify(formData);
+            
+            // デバッグ表示を更新
+            updateDebugDisplay(formData, {status: "success", message: "データを送信しました"});
+            
+            // 模拟API送信
+            fetch('/api/batting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('ネットワークレスポンスが正常ではありません');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 成功時の処理
+                showStatus('成績データを送信しました', 'success');
+                updateDebugDisplay(formData, data);
+                
+                // フォームをリセット
+                this.reset();
+            })
+            .catch(error => {
+                // エラー時の処理
+                showStatus(`エラーが発生しました: ${error.message}`, 'error');
+                updateDebugDisplay(formData, {status: "error", message: error.message});
+            });
+        });
+        
+        // 基本指標取得
+        document.getElementById('load-stats').addEventListener('click', function() {
+            fetch('/api/stats')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('基本指標の取得に失敗しました');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // データで表示を更新
+                    updateStatsDisplay(data);
+                    showStatus('基本指標を取得しました', 'success');
+                    updateDebugDisplay({action: "get_stats"}, data);
+                })
+                .catch(error => {
+                    showStatus(`エラー: ${error.message}`, 'error');
+                    updateDebugDisplay({action: "get_stats"}, {status: "error", message: error.message});
+                });
+        });
+        
+        // 詳細分析取得
+        document.getElementById('load-analysis').addEventListener('click', function() {
+            fetch('/api/analysis')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('詳細分析の取得に失敗しました');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // データで表示を更新
+                    updateAnalysisDisplay(data);
+                    showStatus('詳細分析を取得しました', 'success');
+                    updateDebugDisplay({action: "get_analysis"}, data);
+                })
+                .catch(error => {
+                    showStatus(`エラー: ${error.message}`, 'error');
+                    updateDebugDisplay({action: "get_analysis"}, {status: "error", message: error.message});
+                });
+        });
+        
+        // 可視化データ取得
+        document.getElementById('load-visualization').addEventListener('click', function() {
+            fetch('/api/visualization')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('可視化データの取得に失敗しました');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // データで表示を更新
+                    updateVisualizationDisplay(data);
+                    showStatus('可視化データを取得しました', 'success');
+                    updateDebugDisplay({action: "get_visualization"}, data);
+                })
+                .catch(error => {
+                    showStatus(`エラー: ${error.message}`, 'error');
+                    updateDebugDisplay({action: "get_visualization"}, {status: "error", message: error.message});
+                });
+        });
+        
+        // デバッグ情報クリア
+        document.getElementById('clear-debug').addEventListener('click', function() {
+            document.getElementById('debug-send').textContent = '';
+            document.getElementById('debug-receive').textContent = '';
+            document.getElementById('status-messages').innerHTML = '';
+            showStatus('デバッグ情報をクリアしました', 'success');
+        });
+        
+        // デバッグセクション非表示
+        document.getElementById('toggle-debug').addEventListener('click', function() {
+            const debugSection = document.querySelector('.debug-section');
+            if (debugSection.style.display === 'none') {
+                debugSection.style.display = 'block';
+                this.textContent = 'デバッグセクションを非表示';
+            } else {
+                debugSection.style.display = 'none';
+                this.textContent = 'デバッグセクションを表示';
+            }
+        });
+        
+        // テスト用: 成功レスポンス
+        document.getElementById('test-success').addEventListener('click', function() {
+            const mockData = {
+                status: "success",
+                message: "テスト成功レスポンス",
+                data: {
+                    ab: 25,
+                    h: 8,
+                    tb: 12,
+                    avg: 0.320,
+                    obp: 0.400,
+                    slg: 0.480,
+                    ops: 0.880
+                }
+            };
+            updateDebugDisplay({action: "test_success"}, mockData);
+            showStatus('テスト成功レスポンスを表示しました', 'success');
+        });
+        
+        // テスト用: エラーレスポンス
+        document.getElementById('test-error').addEventListener('click', function() {
+            const mockData = {
+                status: "error",
+                message: "テストエラーレスポンス: サーバーエラーが発生しました"
+            };
+            updateDebugDisplay({action: "test_error"}, mockData);
+            showStatus('テストエラーレスポンスを表示しました', 'error');
+        });
+        
+        // 全データ取得
+        document.getElementById('load-all-data').addEventListener('click', function() {
+            // 模拟: すべてのデータを一度に取得
+            Promise.all([
+                fetch('/api/stats').then(r => r.json()),
+                fetch('/api/analysis').then(r => r.json()),
+                fetch('/api/visualization').then(r => r.json())
+            ])
+            .then(([stats, analysis, visualization]) => {
+                updateStatsDisplay(stats);
+                updateAnalysisDisplay(analysis);
+                updateVisualizationDisplay(visualization);
+                showStatus('全データを取得しました', 'success');
+                updateDebugDisplay({action: "get_all_data"}, {stats, analysis, visualization});
+            })
+            .catch(error => {
+                showStatus(`エラー: ${error.message}`, 'error');
+                updateDebugDisplay({action: "get_all_data"}, {status: "error", message: error.message});
+            });
+        });
+        
+        // 統計表示を更新する関数
+        function updateStatsDisplay(data) {
+            if (data.status === "success") {
+                document.getElementById('ab-value').textContent = data.data.ab || '0';
+                document.getElementById('h-value').textContent = data.data.h || '0';
+                document.getElementById('tb-value').textContent = data.data.tb || '0';
+                document.getElementById('avg-value').textContent = (data.data.avg ? data.data.avg.toFixed(3) : '.000').replace('0.', '.');
+                document.getElementById('obp-value').textContent = (data.data.obp ? data.data.obp.toFixed(3) : '.000').replace('0.', '.');
+                document.getElementById('slg-value').textContent = (data.data.slg ? data.data.slg.toFixed(3) : '.000').replace('0.', '.');
+                document.getElementById('ops-value').textContent = (data.data.ops ? data.data.ops.toFixed(3) : '.000').replace('0.', '.');
+                
+                document.getElementById('rbi-avg-value').textContent = (data.data.rbiAvg ? data.data.rbiAvg.toFixed(3) : '.000').replace('0.', '.');
+                document.getElementById('total-rbi-value').textContent = data.data.totalRbi || '0';
+                document.getElementById('total-runs-value').textContent = data.data.totalRuns || '0';
+            }
+        }
+        
+        // 詳細分析表示を更新する関数
+        function updateAnalysisDisplay(data) {
+            if (data.status === "success") {
+                document.getElementById('ground-rate-value').textContent = (data.data.groundRate ? (data.data.groundRate * 100).toFixed(1) + '%' : '0%');
+                document.getElementById('fly-rate-value').textContent = (data.data.flyRate ? (data.data.flyRate * 100).toFixed(1) + '%' : '0%');
+                document.getElementById('oppo-rate-value').textContent = (data.data.oppoRate ? (data.data.oppoRate * 100).toFixed(1) + '%' : '0%');
+                document.getElementById('pull-rate-value').textContent = (data.data.pullRate ? (data.data.pullRate * 100).toFixed(1) + '%' : '0%');
+                
+                document.getElementById('steal-success-rate-value').textContent = (data.data.stealSuccessRate ? (data.data.stealSuccessRate * 100).toFixed(1) + '%' : '0%');
+                document.getElementById('advance-rate-value').textContent = (data.data.advanceRate ? (data.data.advanceRate * 100).toFixed(1) + '%' : '0%');
+                
+                document.getElementById('pa-value').textContent = data.data.pa || '0';
+                document.getElementById('outs-made-value').textContent = data.data.outsMade || '0';
+            }
+        }
+        
+        // 可視化表示を更新する関数
+        function updateVisualizationDisplay(data) {
+            if (data.status === "success") {
+                // 実際の実装ではここでグラフを描画
+                document.getElementById('trend-chart').textContent = '最近5試合の打率推移: ' + (data.data.trend ? data.data.trend.join(', ') : 'データなし');
+                document.getElementById('heatmap-chart').textContent = '打球方向ヒートマップ: ' + (data.data.heatmap ? JSON.stringify(data.data.heatmap) : 'データなし');
+                document.getElementById('radar-chart').textContent = '打撃傾向レーダーチャート: ' + (data.data.radar ? JSON.stringify(data.data.radar) : 'データなし');
+            }
+        }
+        
+        // 初期化時にデモデータを表示
+        window.addEventListener('DOMContentLoaded', function() {
+            // デモ用のデータを表示
+            const demoStats = {
+                status: "success",
+                data: {
+                    ab: 25,
+                    h: 8,
+                    tb: 12,
+                    avg: 0.320,
+                    obp: 0.400,
+                    slg: 0.480,
+                    ops: 0.880,
+                    rbiAvg: 0.350,
+                    totalRbi: 12,
+                    totalRuns: 8
+                }
+            };
+            
+            const demoAnalysis = {
+                status: "success",
+                data: {
+                    groundRate: 0.45,
+                    flyRate: 0.30,
+                    oppoRate: 0.25,
+                    pullRate: 0.40,
+                    stealSuccessRate: 0.75,
+                    advanceRate: 0.60,
+                    pa: 30,
+                    outsMade: 17
+                }
+            };
+            
+            const demoVisualization = {
+                status: "success",
+                data: {
+                    trend: [0.250, 0.333, 0.400, 0.320, 0.280],
+                    heatmap: { left: 0.350, center: 0.420, right: 0.250 },
+                    radar: { obp: 0.400, slg: 0.480, rbiAvg: 0.350, groundRate: 0.45, pullRate: 0.40 }
+                }
+            };
+            
+            updateStatsDisplay(demoStats);
+            updateAnalysisDisplay(demoAnalysis);
+            updateVisualizationDisplay(demoVisualization);
+            
+            showStatus('システムを初期化しました', 'success');
+        });
+    </script>
+</body>
+</html>            </div>
             
             <div id="pitching-content" class="tab-content">
                 <div class="content-placeholder">
